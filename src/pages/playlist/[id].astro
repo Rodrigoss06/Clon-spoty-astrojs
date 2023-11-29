@@ -1,0 +1,53 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { songs, allPlaylists } from "../../lib/data";
+import SongItemCard from "../../components/PlayListItemCard.astro";
+const { id } = Astro.params;
+const playlist = allPlaylists.find((playlist) => playlist.id == id);
+const playlistSongs = songs.find((song) => song.albumId == playlist?.albumId);
+---
+
+<Layout title="Spotify clone" transition:name=`playlist ${id} box`>
+  <div
+    id="playlist-container"
+    class="relative transition-all duration-300 bg-gradient-to-b from-[#221360] to-[#111112]"
+  >
+    <!-- <PageHeader/> -->
+
+    <header class="flex pt-8 mx-6 gap-6">
+      <picture class="aspect-square w-56 flex-none">
+        <img
+          src={playlist?.cover}
+          alt=`Cover of ${playlist?.title}`
+          class="object-cover w-full h-full"
+          transition:name=`playlist ${playlist?.id} image`
+        />
+      </picture>
+      <div class="flex flex-col justify-between">
+        <span class="flex flex-1 items-end text-sm" transition:name=`none ${id}`
+          >Playlist</span
+        >
+        <div>
+          <span
+            class="text-7xl font-bold block my-3"
+            transition:name=`playlist ${playlist?.id} title`
+            >{playlist?.title}</span
+          >
+        </div>
+        <div class="flex flex-1 items-end">
+          <span class="text-sm"
+            ><a href="/user" class="font-semibold hover:border-b-[1px]"
+              >usuario</a
+            > - {songs?.length} canciones</span
+          >
+        </div>
+      </div>
+    </header>
+    <div class="relative z-10 px-6 pt-4">
+      <!-- <Greetings/> -->
+    </div>
+    <div class="flex flex-wrap relative z-10 px-6 gap-4 mt-6">
+      <!-- {playlistSongs?.map(song=><SongItemCard song={song}/>)} -->
+    </div>
+  </div>
+</Layout>

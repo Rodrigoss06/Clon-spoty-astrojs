@@ -1,0 +1,36 @@
+---
+import Ampliar from "../icons/Ampliar.astro";
+import Crear from "../icons/Crear.astro";
+import Library from "../icons/Library.astro";
+import Search from "../icons/Search.astro";
+import Start from "../icons/Start.astro";
+import SideCard from "./SideCard.astro";
+import SideMenuItem from "./SideMenuItem.astro";
+import { playlists } from "../lib/data.ts";
+console.log(playlists)
+---
+
+<nav class="flex flex-col flex-1 gap-2">
+  <div class="p-2 rounded-lg bg-[#121212]">
+    <ul>
+      <SideMenuItem href="/">
+        <Start />
+         Inicio
+      </SideMenuItem>
+      <SideMenuItem href="/#">
+        <Search />
+         Buscar
+      </SideMenuItem>
+    </ul>
+  </div>
+  <!-- <LibraryMenu/> -->
+  <div class="p-2 rounded-lg bg-[#121212] flex flex-1">
+    <ul class="w-full">
+      <SideMenuItem>
+        <button class="flex flex-shrink-0  justify-start [min-block-size:40px]"><Library />Tu biblioteca</button>
+      </SideMenuItem>
+      { playlists.map(playlist=><SideCard playlist={playlist}/>)}
+      
+    </ul>
+  </div>
+</nav>

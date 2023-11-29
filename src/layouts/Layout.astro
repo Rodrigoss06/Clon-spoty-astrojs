@@ -1,0 +1,78 @@
+---
+import AsideMenu from '../components/AsideMenu.astro';
+import Player from "../components/Player.jsx";
+interface Props {
+	title: string;
+}
+import { ViewTransitions } from "astro:transitions";
+const { title } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="description" content="Astro description" />
+		<meta name="viewport" content="width=device-width" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="generator" content={Astro.generator} />
+		<title>{title}</title>
+		<ViewTransitions fallback='none'/>
+	</head>
+	<body>
+		<div id="app" class="relative h-screen p-2 gap-2">
+			<aside class="[grid-area:aside] flex flex-col overflow-y-auto  ">
+				<AsideMenu/>
+			</aside>
+			<main class="[grid-area:main] rounded-md bg-[#121212]">
+				<slot />
+			</main>
+			<footer class="[grid-area:player] min-h-[70px] overflow-y-auto">
+				<Player client:load transition:name="audio-player" transition:persist/>
+			</footer>
+		</div>
+	</body>
+</html>
+
+
+<style>
+	#app {
+		display: grid;
+		grid-template-areas: 
+		"aside main"
+		"player player";
+		grid-template-columns: 382px 1fr;
+		grid-template-rows: 1fr auto;
+	}
+</style>
+
+
+<style is:global>
+	body {
+		color: white;
+		font-family: CircularSp,CircularSp-Arab,CircularSp-Hebr,CircularSp-Cyrl,CircularSp-Grek,CircularSp-Deva,var(--fallback-fonts,sans-serif),sans-serif;
+	}
+	:root {
+		--accent: 136, 58, 234;
+		--accent-light: 224, 204, 250;
+		--accent-dark: 49, 10, 101;
+		--accent-gradient: linear-gradient(
+			45deg,
+			rgb(var(--accent)),
+			rgb(var(--accent-light)) 30%,
+			white 60%
+		);
+	}
+	html {
+		font-family: system-ui, sans-serif;
+		background: #000000;
+		background-size: 224px;
+	}
+	/* svg{
+		fill: rgb(161 161 170 / var(--tw-text-opacity));
+		
+	}
+	svg:hover{
+		fill: #FFFFFF;
+	} */
+</style>

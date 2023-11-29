@@ -1,0 +1,18 @@
+---
+import { type Song } from "@/lib/data";
+interface Props {
+    song:Song
+}
+const {song} = Astro.props
+song.
+---
+<div class="flex h-9 flex-wrap">
+    <button>{song.id}</button>
+    <div>
+        <picture><img src={song.image} alt=`image from ${song.title}`></picture>
+        <h2>{song.title}</h2>
+        <h4>{song.artists.join(", ")}</h4>
+    </div>
+    <h2>{song.album}</h2>
+    <h2>{song.duration}</h2>
+</div>
