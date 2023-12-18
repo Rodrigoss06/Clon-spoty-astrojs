@@ -14,13 +14,13 @@ const CurrentSong = ({ image, title, artists }) => {
     </div>
   );
 };
-export const Play = () => (
-  <svg role="img" height="16" width="16" aria-hidden="true" viewBox="0 0 16 16">
+export const Play = ({className}) => (
+  <svg role="img" className={className}  height="16" width="16" aria-hidden="true" viewBox="0 0 16 16">
     <path d="M3 1.713a.7.7 0 0 1 1.05-.607l10.89 6.288a.7.7 0 0 1 0 1.212L4.05 14.894A.7.7 0 0 1 3 14.288V1.713z"></path>
   </svg>
 );
-export const Pause = () => (
-  <svg height="16" width="16" role="img" aria-hidden="true" viewBox="0 0 16 16">
+export const Pause = ({className}) => (
+  <svg height="16" className={className} width="16" role="img" aria-hidden="true" viewBox="0 0 16 16">
     <path d="M2.7 1a.7.7 0 0 0-.7.7v12.6a.7.7 0 0 0 .7.7h2.6a.7.7 0 0 0 .7-.7V1.7a.7.7 0 0 0-.7-.7H2.7zm8 0a.7.7 0 0 0-.7.7v12.6a.7.7 0 0 0 .7.7h2.6a.7.7 0 0 0 .7-.7V1.7a.7.7 0 0 0-.7-.7h-2.6z"></path>
   </svg>
 );
@@ -128,7 +128,7 @@ function Player() {
   };
 
   return (
-    <div className="flex flex-row justify-between w-full h-[72px] border-0 m-0 p-0 z-50">
+    <div className="flex flex-row justify-between w-full h-[72px] border-0 m-0 px-[6px] z-50">
       <div>
         <CurrentSong {...currentMusic.song} />
       </div>
