@@ -1,0 +1,24 @@
+
+<h1>test</h1>
+<script>
+  import { getToken } from "../lib/token";
+  const urlParams = new URLSearchParams(window.location.search);
+  let code = urlParams.get("code");
+
+  // Obtener token de acceso si se recibe el código de autorización
+  if (code) {
+    const codeVerifier = localStorage.getItem("code_verifier")!;
+    const {access_token,refresh_token}:any = await getToken(code, "http://localhost:4321/callback", codeVerifier);
+    localStorage.setItem("access_token", access_token!);
+    localStorage.setItem("refresh_token", refresh_token!);
+
+    // Eliminar el código de autorización de la URL actual
+    const url = new URL(window.location.href);
+    url.searchParams.delete("code");
+
+    const updatedUrl = url.search ? url.href : url.href.replace("?", "");
+    window.history.replaceState({}, document.title, updatedUrl);
+    const authUrl = "http://localhost:4321"
+    window.location.href = authUrl
+  }
+</script>

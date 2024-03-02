@@ -1,0 +1,68 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { songs, allPlaylists } from "../api/me/artists";
+import CardPlayButton from "@/components/CardPlayButton";
+const { id } = Astro.params;
+import TableSongs from "../../components/TableSongs";
+import ItemTableSong from "@/components/ItemTableSong";
+import Footer from "@/components/Footer";
+import NavBar from "@/components/NavBar";
+import ArtistHeader from "@/components/ArtistHeader";
+import ArtistAlbums from "@/components/ArtistAlbums";
+const playlist = allPlaylists.find((playlist: any) => playlist.id == id);
+const playlistLocalSongs = songs.filter(
+  (song: any) => song.albumId == playlist?.albumId
+);
+
+---
+
+<Layout title="Spotify clone" transition:name=`playlist ${id} box`>
+  <div>
+    <div
+      id="playlist-container"
+      class="relative transition-all duration-300 bg-gradient-to-b from-[#221360] to-[#111112]"
+    >
+      <NavBar client:load />
+      {
+        id?.length! > 2 ? (
+          <ArtistHeader client:load artist_id={id!} />
+        ) : (
+          <h1>111111111wqwqw</h1>
+        )
+      }
+      <div class="relative z-10 px-6 pt-4"></div>
+    </div>
+    <div class="p-extra bg-[#121212]">
+      <CardPlayButton
+        id={id}
+        playlist={playlist}
+        song={playlistLocalSongs[0]}
+        songs={playlistLocalSongs}
+        size="large"
+        client:load
+        transition:persist
+      />
+    </div>
+
+    <div class="bg-[#121212]">
+      {
+        id!.length > 2 ? (
+          <TableSongs client:load artist_id={id!} />
+        ) : (
+          playlistLocalSongs.map((song: any) => (
+            <ItemTableSong
+              playlist={playlist}
+              client:load
+              songLocal={song}
+              index={song.id!}
+              songsLocal={songs}
+            />
+          ))
+        )
+      }
+    </div>
+    <ArtistAlbums client:load artist_id={id!} />
+    <Footer className="flex-shrink-0" />
+  </div>
+</Layout>
+

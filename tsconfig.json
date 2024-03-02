@@ -5,6 +5,9 @@
     "jsxImportSource": "react",
     "baseUrl": ".",
     "paths": {
+      "@/types":[
+        "src/types/*"
+      ],
       "@/*":[
         "src/*"
       ]

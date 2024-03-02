@@ -1,22 +1,30 @@
 ---
 import Layout from "../../layouts/Layout.astro";
-import { songs, allPlaylists } from "../../lib/data";
-import ItemTableMusic from "../../components/ItemTableMusic.astro";
-import Tiempo from "../../icons/Tiempo.astro";
+import { songs, allPlaylists } from "../api/me/artists";
 import CardPlayButton from "@/components/CardPlayButton";
 const { id } = Astro.params;
-const playlist = allPlaylists.find((playlist) => playlist.id == id);
-const playlistSongs = songs.filter((song) => song.albumId == playlist?.albumId);
+import PlaylistHeader from "../../components/PlaylistHeader";
+import TableSongs from "../../components/TableSongs";
+import ItemTableSong from "@/components/ItemTableSong";
+import Footer from "@/components/Footer";
+import NavBar from "@/components/NavBar";
+const playlist = allPlaylists.find((playlist: any) => playlist.id == id);
+const playlistLocalSongs = songs.filter(
+  (song: any) => song.albumId == playlist?.albumId
+  );
+
 ---
 
 <Layout title="Spotify clone" transition:name=`playlist ${id} box`>
-  <div
-    id="playlist-container"
-    class="relative transition-all duration-300 bg-gradient-to-b from-[#221360] to-[#111112]"
-  >
-    <!-- <PageHeader/> -->
+  <div>
+    <div
+      id="playlist-container"
+      class="relative transition-all duration-300 bg-gradient-to-b from-[#221360] to-[#111112]"
+    >
+      <NavBar client:load/>
+      <!-- <PageHeader/> -->
 
-    <header class="flex pt-8 mx-6 gap-6">
+      <!-- <header class="flex pt-8 mx-6 gap-6">
       <picture class="aspect-square w-56 flex-none">
         <img
           src={playlist?.cover}
@@ -44,17 +52,35 @@ const playlistSongs = songs.filter((song) => song.albumId == playlist?.albumId);
           >
         </div>
       </div>
-    </header>
-    <div class="relative z-10 px-6 pt-4">
-      <!-- <Greetings/> -->
+    </header> -->
+      {
+        id?.length! > 2 ? (
+          <PlaylistHeader client:load playlist_id={id!} />
+        ) : (
+          <PlaylistHeader
+            client:load
+            playlist_id={id!}
+            playlistLocal={playlist}
+          />
+        )
+      }
+      <div class="relative z-10 px-6 pt-4">
+        <!-- <Greetings/> -->
+      </div>
     </div>
-  </div>
-  <div
-    class="p-extra"
-  >
-    <CardPlayButton id={id} playlist={playlist} song={songs[0]} songs={songs} size="large" client:load />
-  </div>
-  <div class="grid grid-cols-1 relative z-10 px-6 gap-x-4 mt-6">
+    <div class="p-extra bg-[#121212]">
+      <CardPlayButton
+        id={id}
+        playlist={playlist}
+        song={playlistLocalSongs[0]}
+        songs={playlistLocalSongs}
+
+        size="large"
+        client:load
+        transition:persist
+      />
+    </div>
+    <!-- <div class="grid grid-cols-1 relative z-10 px-6 gap-x-4 mt-6">
     <div
       class="grid grid-cols-[16px_minmax(120px,_4fr)_minmax(120px,_2fr)_minmax(120px,_1fr)] text-[#a7a7a7] px-4 gap-x-4 h-9 my-1 box-content border-b border-solid border-[hsla(0,0%,100%,.1)] py-2"
     >
@@ -63,6 +89,25 @@ const playlistSongs = songs.filter((song) => song.albumId == playlist?.albumId);
       <h3 class="flex items-center text-[#A7A7A7]">Álbum</h3>
       <h3 class="flex items-center text-[#A7A7A7]"><Tiempo /></h3>
     </div>
-    {playlistSongs.map((song) => <ItemTableMusic song={song} />)}
+    {playlistSongs.map((song) => <ItemTableSong songLocal={song} />)}
+  </div> -->
+    <div class="bg-[#121212]">
+      {
+        id!.length > 2 ? (
+          <TableSongs client:load playlist_id={id!} />
+        ) : (
+          playlistLocalSongs.map((song: any) => (
+            <ItemTableSong
+              playlist={playlist}
+              client:load
+              songLocal={song}
+              index={song.id!}
+              songsLocal={songs}
+            />
+          ))
+        )
+      }
+    </div>
+    <Footer className="flex-shrink-0" />
   </div>
 </Layout>

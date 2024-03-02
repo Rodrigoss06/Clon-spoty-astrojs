@@ -8,3 +8,4 @@ export const usePlayStore = create((set) =>({
     setCurrentMusic: (currentMusic) => set({currentMusic}),
     setVolume: (volume) => set({volume}),
 }))
+

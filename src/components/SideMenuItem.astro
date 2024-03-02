@@ -1,13 +1,15 @@
 ---
 interface Props {
   href?: string;
+  class?: string;
 }
-const { href } = Astro.props;
+const { href} = Astro.props;
 ---
 
 <li>
-  <a
-    class="flex gap-4 fill-[#b3b3b3] text-[#b3b3b3] hover:text-white hover:fill-white py-3 px-5 font-bold font transition duration-300"
+  <a 
+    
+    class={`${Astro.props.class} flex gap-x-2 fill-[#b3b3b3] text-[#b3b3b3] hover:text-white hover:fill-white py-3 px-5 font-bold font transition duration-300  flex-shrink-0  justify-start min-block-size:40px overflow-hidden`}
     href={href}
   >
     <slot/>
