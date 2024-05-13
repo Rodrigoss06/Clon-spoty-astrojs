@@ -3,193 +3,7 @@ import AsideMenu from "../components/AsideMenu.astro";
 import Player from "../components/Player.jsx";
 interface Props {
   title: string;
-  className?: string
-}
-import { ViewTransitions } from "astro:transitions";
-const { title } = Astro.props;
----
-
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="description" content="Astro description" />
-  <meta name="viewport" content="width=device-width" />
-  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-  <meta name="generator" content={Astro.generator} />
-  <meta name="description" content="Clon de Spotify fullstack con Astro" />
-  <title>{title}</title>
-  <ViewTransitions fallback="none" />
-</head>
-<body>
-  <div id="app" class="relative min-h-full h-screen p-2 gap-2 resize-x ">
-    <aside id="aside" class="[grid-area:aside] flex flex-col overflow-y-auto cursor-col-resize z-1">
-      <AsideMenu />
-
-      <div
-        dir="rtl"
-        class="box-border h-full absolute top-0 cursor-col-resize opacity-0 right-[-4.5px] bg-gradient-to-r from-transparent via-white to-transparent bg-no-repeat bg-center bg-cover"
-        style="background-image: linear-gradient(hsla(0,0%,100%,.3),hsla(0,0%,100%,.3));"
-      >
-      </div>
-    </aside>
-    <main
-      id="main"
-      class={`[grid-area:main] ${Astro.props.className} rounded-md overflow-y-auto relative`}
-    >
-      
-      <slot />
-      <div id="customScrollbarContainer" class="h-full " >
-        <div class="" id="customScrollbar"></div>
-      </div>
-    </main>
-    <footer id="footer" class="[grid-area:player] min-h-[70px] ">
-      <Player client:load transition:name="audio-player" transition:persist />
-    </footer>
-  </div>
-  <style >
-    #customScrollbarContainer {
-      position: fixed;
-      z-index:9999  ;
-      top: 10px;
-      right: 8px;
-      bottom: 0;
-      width: 12px; /* Ancho de la barra de desplazamiento */
-      background-color: transparent; /* Fondo transparente */
-    }
-    #customScrollbarContainer::-webkit-scrollbar {
-      display: none; /* Fondo transparente */
-    }
-    #main::-webkit-scrollbar{
-      display: none;
-    }
-    #footer::-webkit-scrollbar {
-      display: none;
-    }
-    #aside::-webkit-scrollbar{
-      display: none;
-    }
-    #customScrollbar {
-      top: 0;
-      z-index: 50;
-      width: 100%;
-      background-color:  rgba(136, 136, 136, 0.8); /* Color de la barra de desplazamiento */
-      opacity: 0; /* La barra de desplazamiento es inicialmente invisible */
-      transition: opacity 0.3s ease-in-out; /* Efecto de transición */
-    }
-    #main:hover #customScrollbar {
-      opacity: 1; /* La barra de desplazamiento se muestra al pasar el ratón sobre el contenedor */
-    }
-  </style>
-<script>
-  const container = document.getElementById('main');
-  const content = container!.children[0];
-  const scrollbarContainer = document.getElementById('customScrollbarContainer');
-  const scrollbar = document.getElementById('customScrollbar');
-
-  function updateScrollbar() {
-    const scrollPercent = container!.scrollTop / (content.scrollHeight - container!.clientHeight);
-    const scrollY = scrollPercent * (container!.clientHeight - scrollbar!.clientHeight);
-    scrollbar!.style.transform = `translateY(${scrollY}px)`;
-  }
-
-  function updateScrollbarSize() {
-    scrollbar!.style.height = (container!.clientHeight * container!.clientHeight) / content.scrollHeight + 'px';
-  }
-
-  updateScrollbarSize();
-
-  container!.addEventListener('scroll',updateScrollbar);
-
-  window.addEventListener('resize', function() {
-    updateScrollbarSize();
-    updateScrollbar();
-  });
-</script>
-
-</body>
-</html>
-
-    <script>
-      const app = document.getElementById("app");
-      const aside = document.getElementById("aside");
-      const main = document.getElementById("main");
-      let IsResize = false;
-      let startX = 0;
-      let startWidth = 0;
-      const handleMouseDow = (e: MouseEvent) => {
-        IsResize = true;
-        startWidth = parseInt(window.getComputedStyle(aside!).width);
-        startX = e.clientX;
-      };
-      const handleMouseMove = (e: MouseEvent) => {
-        if (!IsResize) return;
-        const width = startWidth + (e.clientX - startX);
-        const maxWidth =
-          parseInt(window.getComputedStyle(app!).width) - 70 + 46;
-        const newWidth = Math.max(70, Math.min(width, 382)); // Limitar el ancho mínimo y máximo
-        aside!.style.width = `${newWidth}px`;
-        main!.style.width = `calc(${maxWidth}px - ${newWidth}px)`; // Calcular el ancho restante para el main
-      };
-      const handleMouseUp = () => {
-        IsResize = false;
-      };
-      app?.addEventListener("mousedown", handleMouseDow);
-      document?.addEventListener("mousemove", handleMouseMove);
-      document?.addEventListener("mouseup", handleMouseUp);
-    </script>
- 
-    <style>
-      #app {
-        display: grid;
-        grid-template-areas:
-          "aside main"
-          "player player";
-        grid-template-columns: minmax(70px, 382px) 1fr;
-        grid-template-rows: 1fr 72px;
-      }
-    </style>
-
-    <style is:global>
-      body {
-        color: white;
-        font-family: CircularSp, CircularSp-Arab, CircularSp-Hebr,
-          CircularSp-Cyrl, CircularSp-Grek, CircularSp-Deva,
-          var(--fallback-fonts, sans-serif), sans-serif;
-      }
-
-      :root {
-        --accent: 136, 58, 234;
-        --accent-light: 224, 204, 250;
-        --accent-dark: 49, 10, 101;
-        --accent-gradient: linear-gradient(
-          45deg,
-          rgb(var(--accent)),
-          rgb(var(--accent-light)) 30%,
-          white 60%
-        );
-      }
-      html {
-        font-family: system-ui, sans-serif;
-        background: #000000;
-        background-size: 224px;
-      }
-      /* svg{
-		fill: rgb(161 161 170 / var(--tw-text-opacity));
-		
-	}
-	svg:hover{
-		fill: #FFFFFF;
-	} */
-    </style>
-  </body>
-</html>
-<!-- ---
-import AsideMenu from "../components/AsideMenu.astro";
-import Player from "../components/Player.jsx";
-interface Props {
-  title: string;
-  className?: string
+  className?: string;
 }
 import { ViewTransitions } from "astro:transitions";
 const { title } = Astro.props;
@@ -208,129 +22,167 @@ const { title } = Astro.props;
     <ViewTransitions fallback="none" />
   </head>
   <body>
-    <div id="app" class="relative  min-h-full  h-screen p-2 gap-2 resize-x ">
+    <div id="app" class="relative min-h-full h-screen p-2 gap-2 resize-x">
       <aside
         id="aside"
-        class="[grid-area:aside]  flex flex-col overflow-y-auto cursor-col-resize z-1"
+        class="[grid-area:aside] flex flex-col overflow-y-auto cursor-col-resize z-1"
       >
         <AsideMenu />
 
         <div
           dir="rtl"
-          class="box-border  h-full absolute top-0 cursor-col-resize opacity-0 right-[-4.5px] bg-gradient-to-r from-transparent via-white to-transparent bg-no-repeat bg-center bg-cover"
+          class="box-border h-full absolute top-0 cursor-col-resize opacity-0 right-[-4.5px] bg-gradient-to-r from-transparent via-white to-transparent bg-no-repeat bg-center bg-cover"
           style="background-image: linear-gradient(hsla(0,0%,100%,.3),hsla(0,0%,100%,.3));"
         >
         </div>
       </aside>
       <main
         id="main"
-        class={`[grid-area:main] ${Astro.props.className}  rounded-md overflow-y-hidden`}
+        class={`[grid-area:main] ${Astro.props.className} rounded-md overflow-y-auto relative`}
       >
-        <slot  />
-        <div id="customScrollbar"></div>
-
+        <slot />
+        <div id="customScrollbarContainer" class="h-full">
+          <div class="" id="customScrollbar"></div>
+        </div>
       </main>
-      <footer class="[grid-area:player] min-h-[70px] overflow-y-auto">
+      <footer id="footer" class="[grid-area:player] min-h-[70px]">
         <Player client:load transition:name="audio-player" transition:persist />
       </footer>
     </div>
     <style>
+      #customScrollbarContainer {
+        position: fixed;
+        z-index: 9999;
+        top: 10px;
+        right: 8px;
+        bottom: 0;
+        width: 12px; /* Ancho de la barra de desplazamiento */
+        background-color: transparent; /* Fondo transparente */
+      }
+      #customScrollbarContainer::-webkit-scrollbar {
+        display: none; /* Fondo transparente */
+      }
+      #main::-webkit-scrollbar {
+        display: none;
+      }
+      #footer::-webkit-scrollbar {
+        display: none;
+      }
+      #aside::-webkit-scrollbar {
+        display: none;
+      }
       #customScrollbar {
-      position: absolute;
-      top: 0;
-      right: 0;
-      width: 8px; /* Ancho de la barra de desplazamiento */
-      background-color: #888; /* Color de la barra de desplazamiento */
-      border-radius: 4px; /* Bordes redondeados */
-      opacity: 0; /* La barra de desplazamiento es inicialmente invisible */
-      transition: opacity 0.3s ease-in-out; /* Efecto de transición */
-    }
-    #main:hover #customScrollbar {
-  opacity: 1; /* La barra de desplazamiento se muestra al pasar el ratón sobre el contenedor */
-}
+        top: 0;
+        z-index: 50;
+        width: 100%;
+        background-color: rgba(
+          136,
+          136,
+          136,
+          0.8
+        ); /* Color de la barra de desplazamiento */
+        opacity: 0; /* La barra de desplazamiento es inicialmente invisible */
+        transition: opacity 0.3s ease-in-out; /* Efecto de transición */
+      }
+      #main:hover #customScrollbar {
+        opacity: 1; /* La barra de desplazamiento se muestra al pasar el ratón sobre el contenedor */
+      }
     </style>
-    <script>const container = document.getElementById('app');
-      const content = document.getElementById('main');
-      const scrollbar = document.getElementById('customScrollbar');
-      console.log(content)
-      scrollbar!.style.height = container!.clientHeight * (container!.clientHeight / content!.scrollHeight) + 'px';
-      container!.addEventListener('scroll', function() {
-        const scrollPercent = container!.scrollTop / (content!.scrollHeight - container!.clientHeight);
-        const scrollY = scrollPercent * (container!.clientHeight - scrollbar!.clientHeight);
-        scrollbar!.style.transform = `translateY(${scrollY}px)`;
-      });
-      </script>
     <script>
-      const app = document.getElementById("app");
-      const aside = document.getElementById("aside");
-      const main = document.getElementById("main");
-      let IsResize = false;
-      let startX = 0;
-      let startWidth = 0;
-      const handleMouseDow = (e: MouseEvent) => {
-        IsResize = true;
-        startWidth = parseInt(window.getComputedStyle(aside!).width);
-        startX = e.clientX;
-      };
-      const handleMouseMove = (e: MouseEvent) => {
-        if (!IsResize) return;
-        const width = startWidth + (e.clientX - startX);
-        const maxWidth =
-          parseInt(window.getComputedStyle(app!).width) - 70 + 46;
-        const newWidth = Math.max(70, Math.min(width, 382)); // Limitar el ancho mínimo y máximo
-        aside!.style.width = `${newWidth}px`;
-        main!.style.width = `calc(${maxWidth}px - ${newWidth}px)`; // Calcular el ancho restante para el main
-      };
-      const handleMouseUp = () => {
-        IsResize = false;
-      };
-      app?.addEventListener("mousedown", handleMouseDow);
-      document?.addEventListener("mousemove", handleMouseMove);
-      document?.addEventListener("mouseup", handleMouseUp);
+      const container = document.getElementById("main");
+      const content = container!.children[0];
+      const scrollbarContainer = document.getElementById(
+        "customScrollbarContainer"
+      );
+      const scrollbar = document.getElementById("customScrollbar");
+
+      function updateScrollbar() {
+        const scrollPercent =
+          container!.scrollTop /
+          (content.scrollHeight - container!.clientHeight);
+        const scrollY =
+          scrollPercent * (container!.clientHeight - scrollbar!.clientHeight);
+        scrollbar!.style.transform = `translateY(${scrollY}px)`;
+      }
+
+      function updateScrollbarSize() {
+        scrollbar!.style.height =
+          (container!.clientHeight * container!.clientHeight) /
+            content.scrollHeight +
+          "px";
+      }
+
+      updateScrollbarSize();
+
+      container!.addEventListener("scroll", updateScrollbar);
+
+      window.addEventListener("resize", function () {
+        updateScrollbarSize();
+        updateScrollbar();
+      });
     </script>
- 
-    <style>
-      #app {
-        display: grid;
-        grid-template-areas:
-          "aside main"
-          "player player";
-        grid-template-columns: minmax(70px, 382px) 1fr;
-        grid-template-rows: 1fr 72px;
-      }
-    </style>
+  </body><script>
+    const app = document.getElementById("app");
+    const aside = document.getElementById("aside");
+    const main = document.getElementById("main");
+    let IsResize = false;
+    let startX = 0;
+    let startWidth = 0;
+    const handleMouseDow = (e: MouseEvent) => {
+      IsResize = true;
+      startWidth = parseInt(window.getComputedStyle(aside!).width);
+      startX = e.clientX;
+    };
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!IsResize) return;
+      const width = startWidth + (e.clientX - startX);
+      const maxWidth = parseInt(window.getComputedStyle(app!).width) - 70 + 46;
+      const newWidth = Math.max(70, Math.min(width, 382)); // Limitar el ancho mínimo y máximo
+      aside!.style.width = `${newWidth}px`;
+      main!.style.width = `calc(${maxWidth}px - ${newWidth}px)`; // Calcular el ancho restante para el main
+    };
+    const handleMouseUp = () => {
+      IsResize = false;
+    };
+    app?.addEventListener("mousedown", handleMouseDow);
+    document?.addEventListener("mousemove", handleMouseMove);
+    document?.addEventListener("mouseup", handleMouseUp);
+  </script>
 
-    <style is:global>
-      body {
-        color: white;
-        font-family: CircularSp, CircularSp-Arab, CircularSp-Hebr,
-          CircularSp-Cyrl, CircularSp-Grek, CircularSp-Deva,
-          var(--fallback-fonts, sans-serif), sans-serif;
-      }
+  <style>
+    #app {
+      display: grid;
+      grid-template-areas:
+        "aside main"
+        "player player";
+      grid-template-columns: minmax(70px, 382px) 1fr;
+      grid-template-rows: 1fr 72px;
+    }
+  </style>
 
-      :root {
-        --accent: 136, 58, 234;
-        --accent-light: 224, 204, 250;
-        --accent-dark: 49, 10, 101;
-        --accent-gradient: linear-gradient(
-          45deg,
-          rgb(var(--accent)),
-          rgb(var(--accent-light)) 30%,
-          white 60%
-        );
-      }
-      html {
-        font-family: system-ui, sans-serif;
-        background: #000000;
-        background-size: 224px;
-      }
-      /* svg{
-		fill: rgb(161 161 170 / var(--tw-text-opacity));
-		
-	}
-	svg:hover{
-		fill: #FFFFFF;
-	} */
-    </style>
-  </body>
-</html> -->
+  <style is:global>
+    body {
+      color: white;
+      font-family: CircularSp, CircularSp-Arab, CircularSp-Hebr, CircularSp-Cyrl,
+        CircularSp-Grek, CircularSp-Deva, var(--fallback-fonts, sans-serif),
+        sans-serif;
+    }
+
+    :root {
+      --accent: 136, 58, 234;
+      --accent-light: 224, 204, 250;
+      --accent-dark: 49, 10, 101;
+      --accent-gradient: linear-gradient(
+        45deg,
+        rgb(var(--accent)),
+        rgb(var(--accent-light)) 30%,
+        white 60%
+      );
+    }
+    html {
+      font-family: system-ui, sans-serif;
+      background: #000000;
+      background-size: 224px;
+    }
+  </style>
+</html>

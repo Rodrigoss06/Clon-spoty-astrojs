@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { sha256, base64encode, generateParams, getToken } from "../lib/token";
+import { sha256, base64encode, generateParams } from "../lib/token";
 import axios from "axios";
 import { Button, Label, Modal } from "flowbite-react";
 
